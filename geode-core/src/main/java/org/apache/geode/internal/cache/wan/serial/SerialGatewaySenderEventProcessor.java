@@ -35,6 +35,7 @@ import org.apache.geode.SystemFailure;
 import org.apache.geode.cache.CacheException;
 import org.apache.geode.cache.CacheListener;
 import org.apache.geode.cache.EntryEvent;
+import org.apache.geode.cache.Operation;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.RegionDestroyedException;
 import org.apache.geode.cache.wan.GatewayQueueEvent;
@@ -379,6 +380,9 @@ public class SerialGatewaySenderEventProcessor extends AbstractGatewaySenderEven
       if (m != null) {
         for (EventWrapper ew : m.values()) {
           GatewaySenderEventImpl gatewayEvent = ew.event;
+          if (logger.isDebugEnabled()) {
+            logger.debug("releaseUnprocessedEvents:" + gatewayEvent);
+          }
           gatewayEvent.release();
         }
         this.unprocessedEvents = null;
@@ -423,9 +427,11 @@ public class SerialGatewaySenderEventProcessor extends AbstractGatewaySenderEven
         } else {
           // If it is not, create an uninitialized GatewayEventImpl and
           // put it into the map of unprocessed events.
-          senderEvent = new GatewaySenderEventImpl(operation, event, substituteValue, false); // OFFHEAP
-                                                                                              // ok
-          handleSecondaryEvent(senderEvent);
+          if (!event.getOperation().equals(Operation.UPDATE_VERSION_STAMP)
+              && !((EntryEventImpl) event).isConcurrencyConflict()) {
+            senderEvent = new GatewaySenderEventImpl(operation, event, substituteValue, false); // OFFHEAP
+            handleSecondaryEvent(senderEvent);
+          }
         }
       }
     }

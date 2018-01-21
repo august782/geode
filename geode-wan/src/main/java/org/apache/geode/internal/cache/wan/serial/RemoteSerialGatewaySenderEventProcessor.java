@@ -14,12 +14,20 @@
  */
 package org.apache.geode.internal.cache.wan.serial;
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.Logger;
 
+import org.apache.geode.cache.client.internal.Connection;
+import org.apache.geode.cache.client.internal.pooling.ConnectionDestroyedException;
 import org.apache.geode.cache.wan.GatewaySender;
+import org.apache.geode.internal.Version;
 import org.apache.geode.internal.cache.wan.AbstractGatewaySender;
+import org.apache.geode.internal.cache.wan.GatewaySenderConfigurationException;
 import org.apache.geode.internal.cache.wan.GatewaySenderEventCallbackDispatcher;
+import org.apache.geode.internal.cache.wan.GatewaySenderEventDispatcher;
 import org.apache.geode.internal.cache.wan.GatewaySenderEventRemoteDispatcher;
+import org.apache.geode.internal.cache.wan.GatewaySenderException;
 import org.apache.geode.internal.logging.LogService;
 
 public class RemoteSerialGatewaySenderEventProcessor extends SerialGatewaySenderEventProcessor {
@@ -42,6 +50,17 @@ public class RemoteSerialGatewaySenderEventProcessor extends SerialGatewaySender
     } else {
       this.dispatcher = new GatewaySenderEventCallbackDispatcher(this);
     }
+  }
+
+  /**
+   * Returns if corresponding receiver WAN site of this GatewaySender has GemfireVersion > 7.0.1
+   *
+   * @param disp
+   * @return true if remote site Gemfire Version is >= 7.0.1
+   */
+  protected boolean shouldSendVersionEvents(GatewaySenderEventDispatcher disp)
+      throws GatewaySenderException {
+    return true;
   }
 
 }

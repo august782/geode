@@ -81,40 +81,9 @@ public class RemoteParallelGatewaySenderEventProcessor extends ParallelGatewaySe
    * @param disp
    * @return true if remote site Gemfire Version is >= 7.0.1
    */
-  private boolean shouldSendVersionEvents(GatewaySenderEventDispatcher disp)
+  protected boolean shouldSendVersionEvents(GatewaySenderEventDispatcher disp)
       throws GatewaySenderException {
-    try {
-      GatewaySenderEventRemoteDispatcher remoteDispatcher =
-          (GatewaySenderEventRemoteDispatcher) disp;
-      // This will create a new connection if no batch has been sent till
-      // now.
-      Connection conn = remoteDispatcher.getConnection(false);
-      if (conn != null) {
-        short remoteSiteVersion = conn.getWanSiteVersion();
-        if (Version.GFE_701.compareTo(remoteSiteVersion) <= 0) {
-          return true;
-        }
-      }
-    } catch (GatewaySenderException e) {
-      Throwable cause = e.getCause();
-      if (cause instanceof IOException || e instanceof GatewaySenderConfigurationException
-          || cause instanceof ConnectionDestroyedException) {
-        try {
-          int sleepInterval = GatewaySender.CONNECTION_RETRY_INTERVAL;
-          if (logger.isDebugEnabled()) {
-            logger.debug("Sleeping for {} milliseconds", sleepInterval);
-          }
-          Thread.sleep(sleepInterval);
-        } catch (InterruptedException ie) {
-          // log the exception
-          if (logger.isDebugEnabled()) {
-            logger.debug(ie.getMessage(), ie);
-          }
-        }
-      }
-      throw e;
-    }
-    return false;
+    return true;
   }
 
 }
