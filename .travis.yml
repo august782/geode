@@ -33,13 +33,6 @@ cache:
 after_failure:
   - cat /home/travis/build/apache/geode/build/reports/rat/rat-report.txt
 
-notifications:
-  email:
-    recipients:
-      - dev@geode.apache.org
-    on_success: change
-    on_failure: change
-
 branches:
   except:
     - /^feature.*$/
