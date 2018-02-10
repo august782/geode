@@ -27,6 +27,9 @@ before_install:
 before_script:
   - export _JAVA_OPTIONS='-Xmx1024m -Xms512m'
 
+script:
+  - echo "SKIPPING TESTING"
+
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
   - find $TRAVIS_BUILD_DIR -name ".gradle" | while read line; do du -sh $line; DIR=$(dirname $HOME/CACHE$line); mkdir -p $DIR; cp -r $line $DIR; done
