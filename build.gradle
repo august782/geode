@@ -60,6 +60,10 @@ allprojects {
   if (!buildRoot.isEmpty()) {
     buildDir = buildRoot + project.path.replace(":", "/") + "/build"
   }
+
+  tasks.withType(JavaCompile) {
+    options.incremental = true
+  }
 }
 
 task cleanAll(type: Delete) {
