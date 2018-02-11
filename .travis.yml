@@ -20,16 +20,13 @@ jdk:
 
 # Copy in cache for assemble step
 before_install:
-    - find $HOME/CACHE -name ".gradle" | while read line; do du -sh $line; DIR=$(dirname ${line#$HOME/CACHE}); mkdir -p $DIR; cp -r $line $DIR; done
-    - find $HOME/CACHE -name "*.class" | while read line; do DIR=$(dirname ${line#$HOME/CACHE}); mkdir -p $DIR; cp -r $line $DIR; done
-
-install:
-    - touch NOW
-    - gradle assemble
-    - find -newer NOW
+  - find $HOME/CACHE -name ".gradle" | while read line; do du -sh $line; DIR=$(dirname ${line#$HOME/CACHE}); mkdir -p $DIR; cp -r $line $DIR; done
+  - find $HOME/CACHE -name "*.class" | while read line; do DIR=$(dirname ${line#$HOME/CACHE}); mkdir -p $DIR; cp -r $line $DIR; done
+  - touch NOW
 
 # Update _JAVA_OPTIONS environment variable
 before_script:
+  - find -newer NOW
   - export _JAVA_OPTIONS='-Xmx1024m -Xms512m'
 
 script:
