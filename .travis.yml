@@ -23,6 +23,11 @@ before_install:
     - find $HOME/CACHE -name ".gradle" | while read line; do du -sh $line; DIR=$(dirname ${line#$HOME/CACHE}); mkdir -p $DIR; cp -r $line $DIR; done
     - find $HOME/CACHE -name "*.class" | while read line; do DIR=$(dirname ${line#$HOME/CACHE}); mkdir -p $DIR; cp -r $line $DIR; done
 
+install:
+    - touch NOW
+    - gradle assemble
+    - find -newer NOW
+
 # Update _JAVA_OPTIONS environment variable
 before_script:
   - export _JAVA_OPTIONS='-Xmx1024m -Xms512m'
