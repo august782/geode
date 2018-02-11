@@ -56,6 +56,9 @@ public abstract class CommonCrudController extends AbstractBaseController {
 
   private static final Logger logger = LogService.getLogger();
 
+  public static void m() {
+  }
+
   /**
    * List all available resources (Regions) in the GemFire cluster
    *
